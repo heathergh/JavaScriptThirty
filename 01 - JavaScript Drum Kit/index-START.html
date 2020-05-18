@@ -6,8 +6,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -58,7 +56,29 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  /*
+  * This function will play corresponding audio clip for key based on the keycode
+  */
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`)
+    
+    if (!audio) return; // if keycode doesn't match one of data-key of audio element, stop the function
+    audio.currentTime = 0; // play the audio element from the beginning
+    audio.play(); // play the audio associated with the key code
+    key.classList.add('playing'); // add class of playing to the audio element that matches the key code
+  }
 
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return; // skip it if it's not a transform css effect
+
+    this.classList.remove('playing'); // remove the 'playing' class once the transform effect is done
+  }
+  
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  window.addEventListener('keydown', playSound); // add event listender for keydown event
 </script>
 
 
