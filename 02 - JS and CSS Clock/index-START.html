@@ -5,8 +5,6 @@
   <title>JS + CSS Clock</title>
 </head>
 <body>
-
-
     <div class="clock">
       <div class="clock-face">
         <div class="hand hour-hand"></div>
@@ -62,12 +60,82 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.5s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+    }
+
+    .min-hand {
+      background: yellow;
+    }
+
+    .hour-hand {
+      background: red;
+    }
+
+    .no-transition {
+      transition: none;
     }
 
   </style>
 
   <script>
+    const secondsHand = document.querySelector('.second-hand');
+    const minHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+    
+    function setInitalClockStyling() {
+      secondsHand.style.transform = `rotate(${secondsToDegrees}deg)`;
+      
+      minHand.style.transform = `rotate(${minutesToDegrees}deg)`
+      
+      hourHand.style.transform = `rotate(${hoursToDegrees}deg)`;
+    }
 
+    /*
+    Initialize variables to store values of seconds, minutes, and hours on page load.
+    Convert these seconds, minutes, and hours values to degrees, so the a degree counter can be initialized and continually incremented 
+    */
+    const currentTime = new Date();
+
+    const secondsHandOnLoad = currentTime.getSeconds();
+    let secondsToDegrees = ((secondsHandOnLoad / 60) * 360) + 90;
+    
+    const minuteHandOnLoad = currentTime.getMinutes();
+    let minutesToDegrees = ((minuteHandOnLoad / 60) * 360) + 90;
+    
+    const hourHandOnLoad = currentTime.getHours();
+    let hoursToDegrees = ((hourHandOnLoad / 12) * 360) + 90;
+    
+    // Increments the time degrees by a specific number of degrees
+    function addTotalDegrees(currentTimeToDegrees, degreesToAdd) {  
+      return currentTimeToDegrees += degreesToAdd;
+    }
+    
+    // Sets the styling for the clock hand based on total degrees tallied for the clock hand since page load
+    function setClockHandStyling(clockHand, degrees) {
+      clockHand.style.transform = `rotate(${degrees}deg)`;
+    }
+    
+    // Set initial styling of the clock on page load
+    setInitalClockStyling();
+
+    // Style seconds hand every second
+    setInterval(function() {
+      secondsToDegrees += 6;
+    }, 1000);
+
+    setInterval(function() {
+      addTotalDegrees(secondsToDegrees, 6);
+      setClockHandStyling(secondsHand, secondsToDegrees);
+    }, 1000);
+
+    // Style minute hand every minute
+    // setInterval(setClockHandStyling, 60000);
+
+    // Style hour hand every hour
+    // setInterval(setClockHandStyling, 3600000);
 
   </script>
 </body>
