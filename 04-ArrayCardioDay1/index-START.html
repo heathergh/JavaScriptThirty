@@ -32,31 +32,37 @@
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's
     const inventorsBornSixteenthCentury = inventors.filter(inventor => inventor.year > 1500 && inventor.year < 1600);
-    console.log(inventorsBornSixteenthCentury);
+    console.table(inventorsBornSixteenthCentury);
 
     // Array.prototype.map()
     // 2. Give us an array of the inventors first and last names
     const namesOfInventors = inventors.map(inventor => `${inventor.first} ${inventor.last}`);
-    console.log(namesOfInventors);
+    console.table(namesOfInventors);
 
     // Array.prototype.sort()
+    /*
+    If compareFunction is supplied, all non-undefined array elements are sorted according to the return value of the compare function (all undefined elements are sorted to the end of the array, with no call to compareFunction). If a and b are two elements being compared, then:
+
+    If compareFunction(a, b) returns less than 0, sort a to an index lower than b (i.e. a comes first).
+    
+    If compareFunction(a, b) returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements. Note: the ECMAscript standard does not guarantee this behavior, thus, not all browsers (e.g. Mozilla versions dating back to at least 2003) respect this.
+    
+    If compareFunction(a, b) returns greater than 0, sort b to an index lower than a (i.e. b comes first).
+    compareFunction(a, b) must always return the same value when given a specific pair of elements a and b as its two arguments. If inconsistent results are returned, then the sort order is undefined.
+    
+    Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+    */
+
+
+
+
     // 3. Sort the inventors by birthdate, oldest to youngest
-    function compareByBirthdate(currentInventor, nextInventor) {
-      let comparison = 0;
-      if (currentInventor['year'] > nextInventor['year']) comparison = 1;
-      if (currentInventor['year'] < nextInventor['year']) comparison = -1;
-
-      return comparison;
-    }
-
-    const inventorsByAgeAscending = inventors.sort(compareByBirthdate);
-    console.log(inventorsByAgeAscending);
+    const inventorsByAgeAscending = inventors.sort((currentInventor, nextInventor) => currentInventor['year'] > nextInventor['year'] ? 1 : -1);
+    console.table(inventorsByAgeAscending);
 
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live all together?
-    const age = (accumulator, currentValue) => accumulator + (currentValue.passed - currentValue.year);
-    
-    const inventorAges = inventors.reduce(age, 0);
+    const inventorAges = inventors.reduce((totalAges, inventor) => totalAges + (inventor.passed - inventor.year), 0);
 
     console.log(inventorAges);
 
@@ -69,16 +75,12 @@
 
     addAgePropertyToInventor(inventors);
 
-    function sortByAgeAscending(currentInventor, nextInventor) {
-      let comparison = 0;
-      
-      if (currentInventor.age > nextInventor.age) return comparison = 1;
-      if (currentInventor.age < nextInventor.age) return comparison = -1;
-      
-      return comparison;
-    }
+    console.table(inventors.sort((currentInventor, nextInventor) => {
+      const currentInventorAge = currentInventor.passed - currentInventor.year;
+      const nextInventorAge = nextInventor.passed - nextInventor.year;
 
-    inventors.sort(sortByAgeAscending);
+      currentInventorAge > nextInventorAge ? 1 : -1;
+    })
 
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
